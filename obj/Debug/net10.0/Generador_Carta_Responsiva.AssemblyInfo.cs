@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Generador_Carta_Responsiva")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62f443e072ebaf8c621e1fbdcb91c97bba120b0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Generador_Carta_Responsiva")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Generador_Carta_Responsiva")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

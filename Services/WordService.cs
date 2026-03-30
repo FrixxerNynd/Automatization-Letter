@@ -4,6 +4,7 @@ using System.Globalization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
+using Xceed.Pdf;
 
 namespace GeneradorDocumentosSQL.Services
 {
@@ -16,73 +17,81 @@ namespace GeneradorDocumentosSQL.Services
             _logger = logger;
         }
 
-        public async Task<string> GenerarCartaAsync(Cliente cliente, string templatePath, string outputPath)
+        public async Task<string> GenerarCartaAsync(Cliente cliente, string templatePath, string rutaSalida)
         {
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException("No se encontró la plantilla Word.", templatePath);
 
-            string nombreLimpio = string.Concat(
-                (cliente.Nombre ?? "SinNombre").Split(Path.GetInvalidFileNameChars())
-            );
-            string nombreArchivo = $"Carta_{cliente.Folio}_{nombreLimpio}.docx";
-            string rutaSalida = Path.Combine(outputPath, nombreArchivo);
-
-            if (!Directory.Exists(outputPath))
-                Directory.CreateDirectory(outputPath);
-
-            var culturaEs = new CultureInfo("es-MX");
-            string fechaFormateada = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy", culturaEs);
-
-            await Task.Run(() =>
+            try
             {
-                File.Copy(templatePath, rutaSalida, overwrite: true);
+                var culturaEs = new CultureInfo("es-MX");
+                string fechaFormateada = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy", culturaEs);
+                string fechaImpresora = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy 'a las' HH:mm", culturaEs);
 
-                using var doc = WordprocessingDocument.Open(rutaSalida, isEditable: true);
-
-                var mainPart = doc.MainDocumentPart
-                    ?? throw new InvalidOperationException("El documento no tiene parte principal.");
-
-                var body = mainPart.Document?.Body
-                    ?? throw new InvalidOperationException("El documento no tiene cuerpo.");
-
-                // Recorre cada párrafo y consolida el texto antes de reemplazar
-                foreach (var parrafo in body.Descendants<Paragraph>())
+                await Task.Run(() =>
                 {
-                    // Obtiene el texto completo del párrafo uniendo todos los runs
-                    string textoCompleto = string.Concat(parrafo.Descendants<Run>()
-                        .Select(r => r.InnerText));
+                    File.Copy(templatePath, rutaSalida, overwrite: true);
 
-                    // Solo procesa párrafos que tengan placeholders
-                    if (!textoCompleto.Contains('{')) continue;
+                    using var doc = WordprocessingDocument.Open(rutaSalida, isEditable: true);
 
-                    textoCompleto = textoCompleto
-                        .Replace("{nombre_cliente}", cliente.Nombre ?? "N/A")
-                        .Replace("{fecha}", fechaFormateada)
-                        .Replace("{folio}", cliente.Folio.ToString());
+                    var mainPart = doc.MainDocumentPart
+                        ?? throw new InvalidOperationException("El documento no tiene parte principal.");
 
-                    // Limpia los runs existentes y deja solo uno con el texto reemplazado
-                    var primerRun = parrafo.Descendants<Run>().FirstOrDefault();
-                    if (primerRun == null) continue;
+                    var body = mainPart.Document?.Body
+                        ?? throw new InvalidOperationException("El documento no tiene cuerpo.");
 
-                    // Elimina todos los runs del párrafo
-                    foreach (var run in parrafo.Descendants<Run>().ToList())
-                        run.Remove();
-
-                    // Inserta un run limpio con el texto ya reemplazado
-                    primerRun.GetFirstChild<Text>()?.Remove();
-                    primerRun.AppendChild(new Text(textoCompleto)
+                    void ReemplazarParrafo(IEnumerable<Paragraph> parrafos)
                     {
-                        Space = SpaceProcessingModeValues.Preserve
-                    });
-                    parrafo.AppendChild(primerRun);
-                }
+                        foreach (var parrafo in parrafos)
+                        {
+                            string textoCompleto = string.Concat(parrafo.Descendants<Run>()
+                                .Select(r => r.InnerText));
 
-                mainPart.Document.Save();
-            });
+                            if (!textoCompleto.Contains('{')) continue;
 
+                            textoCompleto = textoCompleto
+                                .Replace("{nombre_cliente}", cliente.Nombre ?? "N/A")
+                                .Replace("{fecha}", fechaFormateada)
+                                .Replace("{folio}", cliente.Folio.ToString())
+                                .Replace("{fecha_impresora}", fechaImpresora);
 
-            _logger.LogInformation("Carta generada: {RutaSalida}", rutaSalida);
-            return rutaSalida;
+                            var primerRun = parrafo.Descendants<Run>().FirstOrDefault();
+                            if (primerRun == null) continue;
+
+                            foreach (var run in parrafo.Descendants<Run>().ToList())
+                                run.Remove();
+
+                            primerRun.AppendChild(new Text(textoCompleto)
+                            {
+                                Space = SpaceProcessingModeValues.Preserve
+                            });
+                            parrafo.AppendChild(primerRun);
+                        }
+                    }
+
+                    ReemplazarParrafo(body.Descendants<Paragraph>());
+
+                    foreach (var footer in mainPart.FooterParts)
+                    {
+                        var footerBody = footer.Footer
+                        ?? throw new InvalidOperationException("El pie de página no tiene contenido.");
+
+                        ReemplazarParrafo(footerBody.Descendants<Paragraph>());
+                        footer.Footer.Save();
+                    }
+
+                    mainPart.Document.Save();
+                });
+
+                _logger.LogInformation("Carta generada: {RutaSalida}", rutaSalida);
+                return rutaSalida;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al generar carta para cliente {IdCliente}, folio {Folio}",
+                    cliente.IdCliente, cliente.Folio);
+                throw;
+            }
         }
     }
 }

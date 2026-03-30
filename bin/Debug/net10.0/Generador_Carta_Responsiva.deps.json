@@ -12,6 +12,7 @@
           "Microsoft.Data.SqlClient": "7.0.0",
           "Microsoft.Extensions.Hosting": "10.0.1",
           "System.Drawing.Common": "10.0.5",
+          "System.Management": "10.0.5",
           "Xceed.Words.NET": "5.2.26166.7850"
         },
         "runtime": {
@@ -676,6 +677,14 @@
           }
         }
       },
+      "System.CodeDom/10.0.5": {
+        "runtime": {
+          "lib/net10.0/System.CodeDom.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
       "System.Configuration.ConfigurationManager/9.0.13": {
         "dependencies": {
           "System.Diagnostics.EventLog": "10.0.1",
@@ -746,6 +755,25 @@
           "lib/net10.0/System.IO.Packaging.dll": {
             "assemblyVersion": "10.0.0.0",
             "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
+      "System.Management/10.0.5": {
+        "dependencies": {
+          "System.CodeDom": "10.0.5"
+        },
+        "runtime": {
+          "lib/net10.0/System.Management.dll": {
+            "assemblyVersion": "10.0.0.5",
+            "fileVersion": "10.0.526.15411"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net10.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "10.0.0.5",
+            "fileVersion": "10.0.526.15411"
           }
         }
       },
@@ -1157,6 +1185,13 @@
       "path": "skiasharp.nativeassets.win32/2.88.8",
       "hashPath": "skiasharp.nativeassets.win32.2.88.8.nupkg.sha512"
     },
+    "System.CodeDom/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hGZWDDJh1U6t7fy3iO4HlZYK1ur1fWE3sTqTNHkHk0Leh0JUcxYM//JtLBNG5g+6D2Lt0+aHH8rc7e5oIlNgCg==",
+      "path": "system.codedom/10.0.5",
+      "hashPath": "system.codedom.10.0.5.nupkg.sha512"
+    },
     "System.Configuration.ConfigurationManager/9.0.13": {
       "type": "package",
       "serviceable": true,
@@ -1191,6 +1226,13 @@
       "sha512": "sha512-JTpM4z0wpoIHHDvlCU27HsXo+zVnpWib94HXQpzzr+jc/P9NYf4w353AK4MXyGq/grm1mbLi7eXsOsDU8sGmNg==",
       "path": "system.io.packaging/10.0.2",
       "hashPath": "system.io.packaging.10.0.2.nupkg.sha512"
+    },
+    "System.Management/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JhBVxvWhUJ0KAquUK0dMnc3a1Ol4JyH8fMrMQZ9GgEUkrtvPy8DE57SDnGnuvOdI0maJOdguxw87N5bh2eL87A==",
+      "path": "system.management/10.0.5",
+      "hashPath": "system.management.10.0.5.nupkg.sha512"
     },
     "System.Security.Cryptography.Pkcs/9.0.13": {
       "type": "package",

@@ -104,21 +104,43 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+
             try
             {
                 var datos = await _db.ObtenerDatosParaCartaAsync(_ultimoId);
 
                 if (datos != null)
                 {
-                    string rutaDoc = await _word.GenerarCartaAsync(datos, _rutaPlantilla, _rutaDestino);
-                    await _print.ImprimirAsync(rutaDoc, _nombreImpresora);
+                    string rutaTemp = Path.Combine(Path.GetTempPath(), $"Carta_{datos.Folio}_{Guid.NewGuid()}.docx");
+                    try
+                    {
+                        string rutaDoc = await _word.GenerarCartaAsync(datos, _rutaPlantilla, rutaTemp);
+                        await _print.ImprimirAsync(rutaDoc, _nombreImpresora);
+
+
+                        // Espera a que la impresora termine de procesar el documento antes de eliminar el archivo temporal
+                        await Task.Delay(20000);
+
+                        _logger.LogInformation(
+                        "Carta generada e impresa para cliente: {Nombre}, Ticket: {IdTicket}",
+                        datos.Nombre, datos.Folio);
+
+                    }
+                    finally
+                    {
+                        // Se elimina el archivo temporal siempre, incluso si hay error
+                        if (File.Exists(rutaTemp))
+                        {
+                            File.Delete(rutaTemp);
+                            _logger.LogInformation("Archivo temporal eliminado: {Ruta}", rutaTemp);
+                        }
+                    }
+
 
                     _ultimoId = datos.Folio;
                     GuardarEstado();
 
-                    _logger.LogInformation(
-                        "Carta generada e impresa para cliente: {Nombre}, Ticket: {IdTicket}",
-                        datos.Nombre, datos.Folio);
+
                 }
             }
             catch (Exception ex)

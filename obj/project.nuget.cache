@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tPhIp3ASB60=",
+  "dgSpecHash": "T+M/LyLdRT0=",
   "success": true,
   "projectFilePath": "C:\\Users\\D\\Documents\\CABS\\Generador_Carta_Responsiva\\Generador_Carta_Responsiva.csproj",
   "expectedPackageFiles": [
@@ -51,11 +51,13 @@
     "C:\\Users\\D\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.8\\skiasharp.nativeassets.macos.2.88.8.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.8\\skiasharp.nativeassets.win32.2.88.8.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\system.codedom\\10.0.5\\system.codedom.10.0.5.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.13\\system.configuration.configurationmanager.9.0.13.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.diagnostics.eventlog\\10.0.1\\system.diagnostics.eventlog.10.0.1.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.drawing.common\\10.0.5\\system.drawing.common.10.0.5.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.16.0\\system.identitymodel.tokens.jwt.8.16.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.io.packaging\\10.0.2\\system.io.packaging.10.0.2.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\system.management\\10.0.5\\system.management.10.0.5.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.13\\system.security.cryptography.pkcs.9.0.13.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.13\\system.security.cryptography.protecteddata.9.0.13.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\xceed.document.net\\5.2.26166.7850\\xceed.document.net.5.2.26166.7850.nupkg.sha512",

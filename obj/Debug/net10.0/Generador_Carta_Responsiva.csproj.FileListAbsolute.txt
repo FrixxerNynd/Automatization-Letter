@@ -99,3 +99,7 @@ C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\obj\Debug\net10.0\Generador
 C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\obj\Debug\net10.0\ref\Generador_Carta_Responsiva.dll
 C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
 C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\obj\Debug\net10.0\Generador_Carta_Responsiva.sourcelink.json
+C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\bin\Debug\net10.0\System.CodeDom.dll
+C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\bin\Debug\net10.0\System.Management.dll
+C:\Users\D\Documents\CABS\Generador_Carta_Responsiva\bin\Debug\net10.0\runtimes\win\lib\net10.0\System.Management.dll

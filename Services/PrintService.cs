@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Management;
 
 namespace GeneradorDocumentosSQL.Services
 {
@@ -24,6 +25,9 @@ namespace GeneradorDocumentosSQL.Services
 
             try
             {
+                _logger.LogInformation("Limpiando cola de impresión...");
+                LimpiarColaImpresora(impresora);
+
                 _logger.LogInformation("Iniciando impresión de '{Documento}' en '{Impresora}'", rutaDocumento, impresora);
 
                 var info = new ProcessStartInfo
@@ -50,6 +54,31 @@ namespace GeneradorDocumentosSQL.Services
             {
                 _logger.LogError(ex, "Error al imprimir '{Documento}' en '{Impresora}'", rutaDocumento, impresora);
                 throw;
+            }
+        }
+
+        private void LimpiarColaImpresora(string impresora)
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher($"SELECT * FROM Win32_PrintJob WHERE Name LIKE '{impresora}%'");
+
+                var trabajos = searcher.Get();
+
+                if (!trabajos.Count.Equals(0))
+                {
+                    _logger.LogWarning("Se encontraron {Count} trabajos atorados en la cola. Limpiando...",
+                        trabajos.Count);
+
+                    foreach (ManagementObject trabajo in trabajos)
+                        trabajo.Delete();
+
+                    _logger.LogInformation("Cola de impresión limpiada.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al limpiar la cola de impresión.");
             }
         }
     }

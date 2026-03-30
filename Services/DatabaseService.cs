@@ -61,6 +61,9 @@ namespace GeneradorDocumentosSQL.Services
                             : reader["nombre"].ToString()!,
 
                         // Agrega aquí el resto de tus campos con el mismo patrón
+                        FechaAlta = reader["fecha"] == DBNull.Value
+                            ? DateTime.Now
+                            : Convert.ToDateTime(reader["fecha"]),
                     };
 
                     return cliente;
