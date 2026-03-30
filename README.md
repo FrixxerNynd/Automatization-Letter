@@ -130,7 +130,6 @@ Configura appsettings.json (o variables de entorno / secretos).
     "TemplatePath": "Templates\\carta-responsiva.docx",
     "PrinterName": "Nombre exacto de la impresora en Windows",
     "IntervalMs": 10000,
-    "RetentionDays": 30
   }
 }
 ```
@@ -189,7 +188,6 @@ Se reemplazan en:
   "WorkerSettings": {
     "TemplatePath": "Templates\\carta-responsiva.docx", -- Se modifica por la ruta donde se almacena la plantilla
     "PrinterName": "Nombre exacto de la impresora en Windows", -- Se modifica por el nombre de la impresora
-    "IntervalMs": 10000, -- Se modifica por el intervalo de tiempo en milisegundos
     "RetentionDays": 30 -- Se modifica por el numero de dias de retencion
   }
 }
