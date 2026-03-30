@@ -25,8 +25,7 @@ namespace GeneradorDocumentosSQL.Services
 
             try
             {
-                _logger.LogInformation("Limpiando cola de impresión...");
-                LimpiarColaImpresora(impresora);
+
 
                 _logger.LogInformation("Iniciando impresión de '{Documento}' en '{Impresora}'", rutaDocumento, impresora);
 
@@ -36,7 +35,7 @@ namespace GeneradorDocumentosSQL.Services
                     Verb = "printto",
                     Arguments = $"\"{impresora}\"",
                     CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Normal,
                     UseShellExecute = true // Necesario para que funcione el Verb "printto"
                 };
 

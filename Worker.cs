@@ -1,7 +1,7 @@
 using System.Text.Json;
 using GeneradorDocumentosSQL.Services;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.Extensions.Configuration;
 public class Worker : BackgroundService
 {
     private readonly DatabaseService _db;
