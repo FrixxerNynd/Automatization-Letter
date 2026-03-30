@@ -73,32 +73,9 @@ public class Worker : BackgroundService
         }
     }
 
-    private void LimpiarArchivosAntiguos()
-    {
-        try
-        {
-            if (!Directory.Exists(_rutaDestino)) return;
-
-            var limite = DateTime.Now.AddDays(-_diasRetencion);
-            foreach (var archivo in Directory.GetFiles(_rutaDestino, "*.docx"))
-            {
-                if (new FileInfo(archivo).CreationTime < limite)
-                {
-                    File.Delete(archivo);
-                    _logger.LogInformation("Archivo eliminado: {Archivo}", archivo);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al limpiar archivos antiguos.");
-        }
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         CargarEstado();
-        LimpiarArchivosAntiguos();
 
         _logger.LogInformation("Worker iniciado. Escuchando desde IdTicket > {UltimoId}", _ultimoId);
 
