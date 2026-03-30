@@ -4,7 +4,11 @@ using System.Globalization;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
-using Xceed.Pdf;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneradorDocumentosSQL.Services
 {
@@ -40,43 +44,46 @@ namespace GeneradorDocumentosSQL.Services
                     var body = mainPart.Document?.Body
                         ?? throw new InvalidOperationException("El documento no tiene cuerpo.");
 
-                    void ReemplazarParrafo(IEnumerable<Paragraph> parrafos)
+                    void ReemplazarEnParrafos(IEnumerable<Paragraph> parrafos)
                     {
-                        foreach (var parrafo in parrafos)
+                        foreach (var parrafo in parrafos.ToList())
                         {
-                            string textoCompleto = string.Concat(parrafo.Descendants<Run>()
-                                .Select(r => r.InnerText));
+                            // Verifica si el párrafo tiene algún placeholder
+                            string textoParrafo = string.Concat(
+                                parrafo.Descendants<Run>().Select(r => r.InnerText));
 
-                            if (!textoCompleto.Contains('{')) continue;
+                            if (!textoParrafo.Contains('{')) continue;
 
-                            textoCompleto = textoCompleto
-                                .Replace("{nombre_cliente}", cliente.Nombre ?? "N/A")
-                                .Replace("{fecha}", fechaFormateada)
-                                .Replace("{folio}", cliente.Folio.ToString())
-                                .Replace("{fecha_impresora}", fechaImpresora);
-
-                            var primerRun = parrafo.Descendants<Run>().FirstOrDefault();
-                            if (primerRun == null) continue;
-
+                            // Reemplaza en cada run individualmente conservando su formato
                             foreach (var run in parrafo.Descendants<Run>().ToList())
-                                run.Remove();
-
-                            primerRun.AppendChild(new Text(textoCompleto)
                             {
-                                Space = SpaceProcessingModeValues.Preserve
-                            });
-                            parrafo.AppendChild(primerRun);
+                                var textoElement = run.GetFirstChild<Text>();
+                                if (textoElement == null) continue;
+
+                                string textoRun = textoElement.Text;
+                                if (!textoRun.Contains('{')) continue;
+
+                                textoElement.Text = textoRun
+                                    .Replace("{nombre_cliente}", cliente.Nombre ?? "N/A")
+                                    .Replace("{fecha}", fechaFormateada)
+                                    .Replace("{folio}", cliente.Folio.ToString())
+                                    .Replace("{fecha_impresion}", fechaImpresora);
+
+                                textoElement.Space = SpaceProcessingModeValues.Preserve;
+                            }
                         }
                     }
 
-                    ReemplazarParrafo(body.Descendants<Paragraph>());
+                    // Reemplaza en el cuerpo del documento
+                    ReemplazarEnParrafos(body.Descendants<Paragraph>());
 
+                    // Reemplaza en todos los pies de página
                     foreach (var footer in mainPart.FooterParts)
                     {
                         var footerBody = footer.Footer
-                        ?? throw new InvalidOperationException("El pie de página no tiene contenido.");
+                            ?? throw new InvalidOperationException("El pie de página no tiene contenido.");
 
-                        ReemplazarParrafo(footerBody.Descendants<Paragraph>());
+                        ReemplazarEnParrafos(footerBody.Descendants<Paragraph>());
                         footer.Footer.Save();
                     }
 
